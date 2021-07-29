@@ -17,7 +17,7 @@
             <li>Filter zurücksetzen</li>
           </ul>
         </div>
-        <div @click="newInvoices" class="button flex">
+        <div @click="newInvoice" class="button flex">
           <div class="inner-button flex">
             <img src="@/assets/icon-plus.svg" alt="" />
           </div>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   name: "Home",
   data() {
@@ -38,7 +39,10 @@ export default {
   },
   components: {},
   methods: {
-    newInvoice() {},
+    ...mapMutations(["TOGGLE_INVOICE"]),
+    newInvoice() {
+      this.TOGGLE_INVOICE();
+    },
     toggleFilterMenu() {
       this.filterMenu = !this.filterMenu;
     },
