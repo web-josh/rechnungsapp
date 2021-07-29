@@ -5,6 +5,7 @@
     class="invoice-wrap flex flex-column"
   >
     <form @submit.prevent="submitForm" action="" class="invoice-content">
+      <Loading v-show="loading" />
       <h1>Neue Rechnung</h1>
 
       <!-- Rechnung von -->
@@ -181,6 +182,7 @@
 
 <script>
 import db from "../firebase/firebaseInit";
+import Loading from "../components/Loading";
 import { mapMutations } from "vuex";
 import { uid } from "uid";
 
@@ -189,6 +191,7 @@ export default {
   data() {
     return {
       dateOptions: { year: "numeric", month: "numeric", day: "numeric" },
+      loading: null,
       billerStreetAddress: null,
       billerCity: null,
       billerZipCode: null,
@@ -211,6 +214,7 @@ export default {
       invoiceTotal: 0,
     };
   },
+  components: { Loading },
   created() {
     // get current date for invoice date field
     this.invoiceDateUnix = Date.now();
@@ -258,6 +262,7 @@ export default {
         alert("Stellen Sie sicher, dass alle Felder ausgefüllt sind!");
         return;
       }
+      this.loading = true;
       this.calInvoiceTotal();
 
       const dataBase = db.collection("invoices").doc();
@@ -287,6 +292,7 @@ export default {
         invoicePaid: null,
       });
 
+      this.loading = false;
       this.TOGGLE_INVOICE();
     },
     submitForm() {
