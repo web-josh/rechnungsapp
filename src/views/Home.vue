@@ -4,11 +4,15 @@
     <div class="header flex">
       <div class="left flex flex-column">
         <h1>Rechnungen</h1>
-        <span>Es sind 4 Rechnungen vorhanden</span>
+        <span>Es sind {{ invoiceData.length }} Rechnungen vorhanden</span>
       </div>
       <div class="right flex">
         <div @click="toggleFilterMenu" class="filter flex">
-          <span>Nach Status filtern</span>
+          <span
+            >Nach Status filtern
+            <span v-if="filteredInvoices">: {{ filteredInvoice }}</span></span
+          >
+
           <img src="@/assets/icon-arrow-down.svg" alt="" />
           <ul v-show="filterMenu" class="filter-menu">
             <li @click="filteredInvoices">Vorlage</li>
@@ -28,7 +32,7 @@
     <!-- Invoices -->
     <div v-if="invoiceData.length > 0">
       <Invoice
-        v-for="(invoice, index) in invoiceData"
+        v-for="(invoice, index) in filteredData"
         :invoice="invoice"
         :key="index"
       />
@@ -63,9 +67,30 @@ export default {
     toggleFilterMenu() {
       this.filterMenu = !this.filterMenu;
     },
+    filteredInvoices(e) {
+      if (e.target.innerText === "Filter zurücksetzen") {
+        this.filteredInvoice = null;
+        return;
+      }
+      this.filteredInvoice = e.target.innerText;
+    },
   },
   computed: {
     ...mapState(["invoiceData"]),
+    filteredData() {
+      return this.invoiceData.filter((invoice) => {
+        if (this.filteredInvoice === "Vorlage") {
+          return invoice.invoiceDraft === true;
+        }
+        if (this.filteredInvoice === "Offen") {
+          return invoice.invoicePending === true;
+        }
+        if (this.filteredInvoice === "Bezahlt") {
+          return invoice.invoicePaid === true;
+        }
+        return invoice;
+      });
+    },
   },
 };
 </script>
