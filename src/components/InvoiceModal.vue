@@ -165,13 +165,15 @@
       <!-- Save/Exit -->
       <div class="save flex">
         <div class="left">
-          <button @click="closeInvoice" class="red">Abbrechen</button>
+          <button type="button" @click="closeInvoice" class="red">
+            Abbrechen
+          </button>
         </div>
         <div class="right flex">
-          <button @click="saveDraft" class="dark-purple">
+          <button type="button" @click="saveDraft" class="dark-purple">
             Entwurf speichern
           </button>
-          <button @click="publishInvoice" class="purple">
+          <button type="button" @click="publishInvoice" class="purple">
             Rechnung erstellen
           </button>
         </div>
@@ -224,7 +226,12 @@ export default {
     );
   },
   methods: {
-    ...mapMutations(["TOGGLE_INVOICE"]),
+    ...mapMutations(["TOGGLE_INVOICE", "TOGGLE_MODAL"]),
+    checkClick(e) {
+      if (e.target === this.$refs.invoiceWrap) {
+        this.TOGGLE_MODAL();
+      }
+    },
     closeInvoice() {
       this.TOGGLE_INVOICE();
     },
