@@ -11,10 +11,10 @@
           <span>Nach Status filtern</span>
           <img src="@/assets/icon-arrow-down.svg" alt="" />
           <ul v-show="filterMenu" class="filter-menu">
-            <li>Vorlage</li>
-            <li>Offen</li>
-            <li>Bezahlt</li>
-            <li>Filter zurücksetzen</li>
+            <li @click="filteredInvoices">Vorlage</li>
+            <li @click="filteredInvoices">Offen</li>
+            <li @click="filteredInvoices">Bezahlt</li>
+            <li @click="filteredInvoices">Filter zurücksetzen</li>
           </ul>
         </div>
         <div @click="newInvoice" class="button flex">
@@ -49,6 +49,7 @@ export default {
   data() {
     return {
       filterMenu: null,
+      filteredInvoice: null,
     };
   },
   components: {
