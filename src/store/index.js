@@ -8,6 +8,7 @@ export default createStore({
     modalActive: null,
     invoicesLoaded: null,
     currentInvoiceArray: null,
+    editInvoice: null,
   },
   mutations: {
     TOGGLE_INVOICE(state) {
@@ -26,8 +27,15 @@ export default createStore({
       state.currentInvoiceArray = state.invoiceData.filter(invoice => {
         return invoice.invoiceId === payload;
       })
-    }
-  },
+    },
+    TOGGLE_EDIT_INVOICE(state) {
+      state.editInvoice = !state.editInvoice;
+    },
+    // filter out the document that we want to delete from our state
+    DELETE_INVOICE(state, payload) {
+      state.invoiceData = state.invoiceData.filter(invoice => invoice.docId !== payload)
+      }
+    },
   actions: {
     async GET_INVOICES({commit, state}){
       const getData = db.collection('invoices');
@@ -64,6 +72,14 @@ export default createStore({
         }
       });
       commit("INVOICES_LOADED");
+    },
+    async UPDATE_INVOICE({commit, dispatch}, {docId, routeId}) {
+      // delete current invoice that we want to update
+      commit('DELETE_INVOICE', docId);
+      await dispatch('GET_INVOICES');
+      commit('TOGGLE_INVOICE');
+      commit('TOGGLE_EDIT_INVOICE');
+      commit('SET_CURRENT_INVOICE', routeId);
     },
   },
   modules: {
